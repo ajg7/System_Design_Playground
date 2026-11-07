@@ -22,3 +22,8 @@ Write the prediction **before** running. Fill in the actual after. The gap is th
 - Predicted DB reads:
 - Actual DB reads:
 - What's still not solved:
+
+## 1.3 Redis goes down
+- Predicted response for `GET /species/25`:
+- Actual:
+- What should happen instead:

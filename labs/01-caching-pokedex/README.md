@@ -29,6 +29,8 @@ The only file you edit is `src/Pokedex.Api/SpeciesService.cs`.
 ---
 
 ## Milestone 1.1: Measure first
+**Read:** `concepts.md` §1
+
 Before touching any code, run the baseline and **write down p50 and p99** in
 `attempts/predictions.md`. Every later claim ("the cache made it faster") is measured
 against this number.
@@ -37,6 +39,8 @@ docker compose run --rm k6 run baseline.js
 ```
 
 ## Milestone 1.2: Cache-aside
+**Read:** `concepts.md` §2–§5
+
 Implement the `TODO(1.2)` parts of `SpeciesService`.
 ```powershell
 dotnet test --filter Milestone=1.2
@@ -50,6 +54,8 @@ Two tests are green from the start (`Update_is_visible...`, `Unknown_species...`
 They're regression guards: caching makes them easy to break.
 
 ## Milestone 1.3: The legendary reveal (break-it)
+**Read:** `concepts.md` §6–§8, *after* step 4 below. Predict first, then learn why.
+
 1. Flush the cache: `docker compose exec redis redis-cli flushall`
 2. Note the current `lab_db_queries_total{op="read"}`.
 3. **Predict** how many DB reads 500 simultaneous requests for Mewtwo will cause with your
@@ -59,6 +65,9 @@ They're regression guards: caching makes them easy to break.
 5. Implement `TODO(1.3)` (coalesce concurrent misses) until `dotnet test --filter Milestone=1.3` is green.
 6. Repeat steps 1–4. Write down what changed, and what *still* isn't solved (hint: how
    many API instances are there in production?).
+7. **Delete one box.** Predict what a trainer sees if Redis dies, and write it down. Then:
+   `docker compose stop redis`, `curl -i localhost:8080/species/25`, then
+   `docker compose start redis`. Was it what you predicted? What *should* happen (§8)?
 
 ## Assessment
 - Tests: `dotnet test --filter Milestone=1.2` and `1.3`

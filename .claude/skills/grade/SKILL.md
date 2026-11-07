@@ -14,6 +14,15 @@ specific, and hard to fool.
   his Mermaid. For break-it, `attempts/predictions.md`.
 - If there's nothing to grade yet, say so and stop.
 
+## 1b. Only assess covered material
+- Grade a lab only after AJ has finished its milestones (check the progress file).
+- Score each item only against what its rubric *Source* (`concepts.md` section or lab step)
+  teaches. Don't dock points for ideas outside it.
+- Killer and follow-up questions must be answerable from covered material: this lab's
+  `concepts.md` plus earlier completed labs. The capstone may draw on all completed labs.
+- If you notice a rubric item with no source, or one asking beyond its source, flag it to
+  AJ and don't score it.
+
 ## 2. Confidence first
 Ask for a 1–5 confidence rating **before** any feedback, unless he already gave one.
 

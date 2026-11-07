@@ -1,5 +1,8 @@
 # Lab 1 Quiz: Caching
 
+Take this after finishing all three milestones. Every question is drawn from `concepts.md`
+and the experiments you ran in this lab: nothing outside them.
+
 Answer in `attempts/quiz-<n>.md` without looking at the rubric. Write the way you'd say it
 in an interview: short, concrete, with the tradeoff named. Then run `/grade lab 1`.
 
@@ -26,5 +29,5 @@ in an interview: short, concrete, with the tradeoff named. Then run `/grade lab 
    DB reads does the legendary reveal cause now, and what would you do if that's still too
    many?
 
-8. **Delete one box.** Redis goes down mid-reveal. What does a trainer see with your code,
-   and what *should* they see? Fail open or fail closed?
+8. **Delete one box.** When you stopped Redis in step 7, what did a trainer see with your
+   code, and what *should* they see? Fail open or fail closed, and what's the catch?

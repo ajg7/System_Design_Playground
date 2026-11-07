@@ -6,18 +6,22 @@ Score each question 0–2. **2** = interview-ready (correct, concrete, tradeoff 
 **1** = right idea, missing the mechanism or the tradeoff. **0** = wrong or hand-wavy.
 Total /16. Lab passes at 12+, with Q2 and Q6 each scoring at least 1.
 
-| # | Full credit requires | Common 1-point answer |
-|---|---|---|
-| 1 | Tail latency is what users and SLOs feel; fan-out makes tails compound. In this lab: 20-connection pool + 100ms queries → requests queue for connections, so p99 includes wait time p50 doesn't. | "p99 is the slow ones" with no mechanism |
-| 2 | Picks invalidate (delete). Race for update-in-place: A reads old from DB, B writes new to DB + cache, A writes stale old value into cache → stale until TTL. Delete makes the next reader reload. Names that delete still has a small race (read-before-delete repopulates stale) bounded by TTL. | Picks delete, can't construct the race |
-| 3 | DB first, then invalidate. Invalidate-first lets a reader reload the *old* DB row into cache between delete and DB write. Mentions retry/at-least-once on the delete, or delayed double-delete. | Correct order, no reader walkthrough |
-| 4 | Without negative caching, every miss on a nonexistent id hits the DB, so attackers can bypass the cache. Fix: cache a sentinel "not found" with a short TTL. Downside: a species created later stays invisible until that TTL expires. | Mentions negative caching, no downside |
-| 5 | TTL is a safety net for invalidation bugs and missed deletes; a week of stale data on a bug is the cost. No TTL is safe only if every write path reliably invalidates (single writer, or change-data-capture) and memory eviction policy is set (e.g. allkeys-lru). | "Data could get stale" only |
-| 6 | Explains cold key + N concurrent misses → N DB reads, pool saturation, p99 explosion. Three of: request coalescing/single-flight (per-process, simplest), distributed lock on the key (cross-instance, adds latency + lock failure modes), early/probabilistic refresh before expiry (hot keys stay warm), jittered TTLs (avoid synchronized mass expiry), pre-warming before a known event. Matches each to a situation. | Lists mitigations without when-to-use |
-| 7 | ~20 reads (one per instance): bounded by instance count, usually fine. If not: distributed lock / lease on the key, pre-warm the key before the reveal, or a local L1 in front of Redis. Connects to TeamLink's hot-key problem. | Says "1" (wrong) or "20" without a next step |
-| 8 | With naive code, Redis exceptions bubble up and the endpoint 500s even though the DB is fine. Should: catch cache failures and fall through to DB (fail open), *with* a circuit breaker or concurrency limit so the DB isn't stampeded by 100% miss traffic. Names that tradeoff. | "Fall back to DB" without the stampede risk |
+**Coverage rule:** every question's *Source* must point at `concepts.md` or a lab step.
+Only grade against what that source teaches; don't dock points for ideas it doesn't cover.
+
+| # | Source | Full credit requires | Common 1-point answer |
+|---|---|---|---|
+| 1 | §1, M1.1 baseline | Tail latency is what users and SLOs feel; tails compound across many calls per page. In this lab: 20-connection pool + ~100ms queries → requests queue for a connection, so p99 includes wait time p50 doesn't. | "p99 is the slow ones" with no mechanism |
+| 2 | §3, M1.2 | Picks delete. Constructs the overwrite race: reader reads old from DB → writer updates DB + cache → reader writes old into cache → stale until TTL. Notes delete narrows but doesn't fully remove the race, so TTL is the backstop. | Picks delete, can't construct the race |
+| 3 | §3 | DB first, then delete. Walks through delete-first: a reader in the gap reloads the old row into cache. Mentions a failed delete leaves staleness until TTL (retry or change-log invalidation). | Correct order, no reader walkthrough |
+| 4 | §4, M1.2 | Without negative caching, missing ids always hit the DB (cache penetration). Fix: cache a not-found marker with a short TTL. Downside: a newly created species is invisible until it expires. Bonus: random ids still get through, so validate input or use a Bloom filter. | Mentions negative caching, no downside |
+| 5 | §5 | TTL is a safety net for missed invalidations; a week means a bug stays wrong for a week. No TTL is safe only with reliable invalidation on every write path *and* an eviction policy like allkeys-lru. | "Data could get stale" only |
+| 6 | §6, M1.3 break-it | Explains cold key + N concurrent misses → N DB reads → pool saturation → p99 explosion, tied to their actual numbers. Names three mitigations from §6 *and* when each is the right call. | Lists mitigations without when-to-use |
+| 7 | §7, M1.3 step 6 | ~one DB read per instance (~20): bounded by instance count, usually fine. If not: distributed lock/lease, pre-warm, or an L1 in-process cache in front of Redis. | Says "1" (wrong) or "20" with no next step |
+| 8 | §8, M1.3 step 7 | Reports what they observed when Redis stopped (their code's actual behavior). Should fail open: treat as a miss and read the DB, *and* protect the DB from the resulting full-traffic miss storm (single-flight, concurrency limit, or circuit breaker). Names that tradeoff. | "Fall back to DB" without the DB-protection risk |
 
 ## Grader notes
 - Probe Q8 even on a full-credit answer: "what protects Postgres when you fall through?"
-- Killer question if the total is 12+: *"The species table is now 500GB and hot keys
-  change hourly. Does cache-aside still work, and what would you change first?"*
+- Killer question if total is 12+ (answerable from §1, §6–§8): *"Your fail-open code is
+  live on 20 instances. Redis dies one second into the Mewtwo reveal. Walk me through what
+  Postgres sees over the next few seconds, and the one change that protects it most."*
