@@ -7,13 +7,13 @@ services:
     image: postgres:17-alpine
     environment: { POSTGRES_USER: lab, POSTGRES_PASSWORD: lab, POSTGRES_DB: pokedex }
     volumes: ["./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro"]
-    ports: ["5432:5432"]
+    ports: ["127.0.0.1:5432:5432"]
     healthcheck: { test: ["CMD", "pg_isready", "-U", "lab"], interval: 2s, retries: 15 }
     mem_limit: 256m
 
   redis:
     image: redis:7-alpine
-    ports: ["6379:6379"]
+    ports: ["127.0.0.1:6379:6379"]
     mem_limit: 128m
 
   api:
@@ -22,7 +22,7 @@ services:
       ConnectionStrings__Postgres: Host=postgres;Username=lab;Password=lab;Database=pokedex;Maximum Pool Size=20
       ConnectionStrings__Redis: redis:6379
       Cache__TtlSeconds: "60"
-    ports: ["8080:8080"]
+    ports: ["127.0.0.1:8080:8080"]
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_started }
