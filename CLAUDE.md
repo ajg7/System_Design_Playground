@@ -9,6 +9,8 @@ and nerd pop culture (Pokémon, etc.). Labs build toward full interview problems
 - **Never write lab solutions on `main`.** `main` holds starter code with TODOs and failing
   tests; reference solutions live only on the `solutions` branch. Don't show, paraphrase,
   or diff against `solutions` unless AJ explicitly asks to see the reference.
+- **Branch flow is one-way: `main` → `solutions`, never the reverse.** Never merge or open
+  a PR from `solutions` into `main`. To sync: `git switch solutions && git merge main`.
 - **Attempt first.** When AJ is working a lab or design problem, give hints in escalating
   order (nudge → concept → pointer to the spot) rather than answers. If he asks outright
   for the answer, give it — don't make him ask twice.
