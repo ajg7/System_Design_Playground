@@ -18,4 +18,6 @@
 - None.
 
 ## Carryover
-- `solutions` branch for Lab 1 not yet created (needs a commit on main first; AJ to approve).
+- `solutions` branch pushed with the Lab 1 reference (7/7 green). Keep it in sync with
+  `git switch solutions && git merge main` whenever main gains harness changes.
+- Ports bound to 127.0.0.1 after a security review; keep that for every new lab.
