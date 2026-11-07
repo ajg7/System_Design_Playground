@@ -1,0 +1,37 @@
+CREATE TABLE species (
+  id           int PRIMARY KEY,
+  name         text NOT NULL,
+  type1        text NOT NULL,
+  type2        text,
+  is_legendary boolean NOT NULL DEFAULT false
+);
+
+INSERT INTO species (id, name, type1, type2, is_legendary) VALUES
+  (1,   'Bulbasaur',  'Grass',    'Poison', false),
+  (4,   'Charmander', 'Fire',     NULL,     false),
+  (6,   'Charizard',  'Fire',     'Flying', false),
+  (7,   'Squirtle',   'Water',    NULL,     false),
+  (9,   'Blastoise',  'Water',    NULL,     false),
+  (25,  'Pikachu',    'Electric', NULL,     false),
+  (39,  'Jigglypuff', 'Normal',   'Fairy',  false),
+  (52,  'Meowth',     'Normal',   NULL,     false),
+  (54,  'Psyduck',    'Water',    NULL,     false),
+  (94,  'Gengar',     'Ghost',    'Poison', false),
+  (130, 'Gyarados',   'Water',    'Flying', false),
+  (131, 'Lapras',     'Water',    'Ice',    false),
+  (133, 'Eevee',      'Normal',   NULL,     false),
+  (143, 'Snorlax',    'Normal',   NULL,     false),
+  (144, 'Articuno',   'Ice',      'Flying', true),
+  (145, 'Zapdos',     'Electric', 'Flying', true),
+  (146, 'Moltres',    'Fire',     'Flying', true),
+  (149, 'Dragonite',  'Dragon',   'Flying', false),
+  (150, 'Mewtwo',     'Psychic',  NULL,     true),
+  (151, 'Mew',        'Psychic',  NULL,     false),
+  (249, 'Lugia',      'Psychic',  'Flying', true),
+  (250, 'Ho-Oh',      'Fire',     'Flying', true),
+  (384, 'Rayquaza',   'Dragon',   'Flying', true),
+  (445, 'Garchomp',   'Dragon',   'Ground', false),
+  (448, 'Lucario',    'Fighting', 'Steel',  false),
+  (658, 'Greninja',   'Water',    'Dark',   false),
+  (778, 'Mimikyu',    'Ghost',    'Fairy',  false),
+  (888, 'Zacian',     'Fairy',    NULL,     true);

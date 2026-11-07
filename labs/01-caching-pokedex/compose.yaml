@@ -1,0 +1,37 @@
+# Lab 1: Pokédex caching. `docker compose up -d --build` from this folder.
+include:
+  - ../../infra/observability/compose.yaml
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment: { POSTGRES_USER: lab, POSTGRES_PASSWORD: lab, POSTGRES_DB: pokedex }
+    volumes: ["./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro"]
+    ports: ["5432:5432"]
+    healthcheck: { test: ["CMD", "pg_isready", "-U", "lab"], interval: 2s, retries: 15 }
+    mem_limit: 256m
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+    mem_limit: 128m
+
+  api:
+    build: { context: ., dockerfile: src/Pokedex.Api/Dockerfile }
+    environment:
+      ConnectionStrings__Postgres: Host=postgres;Username=lab;Password=lab;Database=pokedex;Maximum Pool Size=20
+      ConnectionStrings__Redis: redis:6379
+      Cache__TtlSeconds: "60"
+    ports: ["8080:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_started }
+    mem_limit: 256m
+
+  # Load generator. Only runs on demand:  docker compose run --rm k6 run baseline.js
+  k6:
+    image: grafana/k6:1.2.0
+    profiles: ["load"]
+    working_dir: /scripts
+    volumes: ["./load:/scripts:ro"]
+    environment: { BASE_URL: "http://api:8080" }

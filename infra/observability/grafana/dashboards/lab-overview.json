@@ -1,0 +1,37 @@
+{
+  "uid": "lab-overview",
+  "title": "Lab overview",
+  "refresh": "2s",
+  "time": { "from": "now-5m", "to": "now" },
+  "schemaVersion": 39,
+  "panels": [
+    {
+      "type": "timeseries", "title": "Request rate (req/s)",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prom" },
+      "targets": [{ "refId": "A", "expr": "sum(rate(http_request_duration_seconds_count{job=\"lab-api\"}[10s]))", "legendFormat": "req/s" }]
+    },
+    {
+      "type": "timeseries", "title": "Latency p50 / p99 (s)",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prom" },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "targets": [
+        { "refId": "A", "expr": "histogram_quantile(0.50, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"lab-api\"}[10s])))", "legendFormat": "p50" },
+        { "refId": "B", "expr": "histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{job=\"lab-api\"}[10s])))", "legendFormat": "p99" }
+      ]
+    },
+    {
+      "type": "timeseries", "title": "DB round trips (queries/s)",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prom" },
+      "targets": [{ "refId": "A", "expr": "sum by (op) (rate(lab_db_queries_total[10s]))", "legendFormat": "{{op}}" }]
+    },
+    {
+      "type": "stat", "title": "Total DB round trips",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prom" },
+      "targets": [{ "refId": "A", "expr": "sum(lab_db_queries_total)", "legendFormat": "total" }]
+    }
+  ]
+}

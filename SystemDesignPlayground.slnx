@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/labs/" />
+  <Folder Name="/labs/01-caching-pokedex/" />
+  <Folder Name="/labs/01-caching-pokedex/src/">
+    <Project Path="labs/01-caching-pokedex/src/Pokedex.Api/Pokedex.Api.csproj" />
+  </Folder>
+  <Folder Name="/labs/01-caching-pokedex/tests/">
+    <Project Path="labs/01-caching-pokedex/tests/Pokedex.Tests/Pokedex.Tests.csproj" />
+  </Folder>
+</Solution>
