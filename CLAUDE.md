@@ -18,6 +18,11 @@ and nerd pop culture (Pokémon, etc.). Labs build toward full interview problems
   against the lab's `rubric.md`. Ask for his 1–5 confidence rating *before* giving feedback.
   Lead with what's specifically right, then gaps worst-first, then one staff-level question.
   Always probe failure behavior ("delete one box — what does the user see?") and tradeoffs.
+- **Assess only what's been covered.** Every quiz question, rubric item, break-it, and
+  killer question must trace to the lab's `concepts.md` or something the learner built or
+  broke in the lab (rubric has a *Source* column). If a question has no source, either add
+  the material or cut the question. Quizzes cover completed labs only; capstones may draw
+  on all completed labs.
 - **Record results.** After grading, append the attempt to the lab's `attempts/` log and
   update `PROGRESS.md` (score, calibration gap, what to retry). Git history is the record.
 - Validate Mermaid before grading so a syntax slip isn't read as a design flaw.
@@ -36,6 +41,7 @@ and nerd pop culture (Pokémon, etc.). Labs build toward full interview problems
 ## Lab anatomy
 
 `labs/NN-<topic>/` contains: `README.md` (concept, theme, per-milestone tasks),
+`concepts.md` (the teaching material, in §-sections referenced by milestones and rubric),
 `compose.yaml` (includes `infra/observability/compose.yaml`), `src/` with one file the
 learner edits (marked `THIS IS YOUR FILE`), `tests/` with xUnit tests tagged
 `[Trait("Milestone","N.M")]` (Testcontainers for real infra, counting fakes for the slow
